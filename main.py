@@ -15,10 +15,25 @@ def generate_response():
     """
 
     for token in response.split(" "):
-        time.sleep(0.1)  # Simulate delay
+        time.sleep(0.01)  # Simulate delay
         yield token + " "
 
-    return f"Echo: {user_input}"
+    return f"Echo: {st.session_state.user_input}"
+
+def handle_chat_message():
+    user_input = st.session_state.user_input # linked to chat_input via key
+    if user_input and user_input != "":
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        st.chat_message("user").markdown(user_input)
+
+        # Simulate AI response (replace with actual AI logic)
+        with st.chat_message("ai"):
+            response_generator = generate_response()
+            response = st.write_stream(response_generator)
+
+        st.session_state.messages.append({"role": "ai", "content": response})
+ 
+
 
 for message in st.session_state.messages:
     if message['role'] == 'user':
@@ -26,18 +41,5 @@ for message in st.session_state.messages:
     else:
         st.chat_message("ai").markdown(message['content'])
 
-user_input = st.chat_input("Type your message here...")
-
-if user_input and user_input != "":
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    st.chat_message("user").markdown(user_input)
-
-    # Simulate AI response (replace with actual AI logic)
-    with st.chat_message("ai"):
-        response_generator = generate_response()
-        response = st.write_stream(response_generator)
-
-
-    st.session_state.messages.append({"role": "ai", "content": response})
-    
-    # st.chat_message("ai").markdown(ai_response)
+st.chat_input("Type your message here...", key="user_input", on_submit=handle_chat_message
+              )
