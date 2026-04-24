@@ -1,4 +1,4 @@
-# Streamlit Chat App & Performance Lab
+# Streamlit Chat App
 
 A Streamlit-based web application demonstrating interactive chat interfaces and efficient data caching strategies.
 
